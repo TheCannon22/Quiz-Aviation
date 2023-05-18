@@ -1,0 +1,109 @@
+/* Normalisation supplémentaire 
+============================================================================= */
+
+/*L'utilisation des sélecteurs additionnels pour les pseudo-éléments */
+*, ::before, ::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    user-select:none;
+}
+
+/*Zone du html*/
+/*On lui indique qu'il mesure 100vw de large et 100vh d'hauteur et que sa largueur maximale est de 100%*/
+html{
+    width: 100vw;
+    height: 100vh;
+    max-width: 100%;
+}
+
+
+/*Zone pour les caractéristiques du body de mon quiz*/
+body{
+    /*on met tout en display flex et que tout soit centré parfaitement sur l'écran*/
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    /*On précise que l'hauteur maximale est de 100vw et que l'hauteur est de 100vh*/
+    max-width: 100vw;
+    height: 100vh;
+
+    /*Permet de gérer le contenu de l'élément body*/
+    overflow: hidden;
+
+    /*On met initialement qu'il n'y aucun curseur et qu'il y en aura un qui sera personnalisé*/
+    cursor: none;
+}
+
+/*********************************************************Zone pour faire l'animation du défilement de l'arrière-plan du body***********************************************************************************/
+
+
+/*Keyframe de l'animation qui permettera à l'arrière-plan de bouger vers la droite*/
+@keyframes arriere-plan-defilement {
+    /*On met sa position initiale au début*/
+    0% {
+      background-position: initial;
+    }
+    /*On défile l'arrière-plan de 200px en continu*/
+    100% {
+      background-position: 200px 0px;
+    }
+  }
+  
+/*Caractéristiques du body en mouvement*/
+body {  
+    /*L'arrière-plan bougera de manière répétitif*/
+    background: repeating-linear-gradient(
+    /*Les lignes seront tournées à 135 degrés*/
+    135deg,
+    /*On met les deux princiaples couleurs en différentes tailles et à différents moments pour donner cette effet de 2 lignes*/
+    var(--arriere-plan-intro),
+    var(--arriere-plan-intro) 5%,
+    var(--texte-des-mains) 5%,
+    var(--texte-des-mains) 10%
+    );
+    /*On précise que l'arrière-plan mesure 200px par 200px pour remplir l'arrière-plan*/
+    background-size: 200px 200px;
+
+    /*On ajoute l'animation de l'arrière-plan qui défile. Il va jouer à chaque 2 secondes à l'infini*/
+    animation: arriere-plan-defilement 2s  infinite;
+}
+
+/*Zone des caractéristiques principalesdu header */
+header{
+
+    /*On précise que si le curseur le touche, il n'y aura aucun effet sur le header*/
+    pointer-events: none;
+    /*On précise que l'hauteur minimale est de 10vh et que sa largeur est de 100%*/
+    min-height: 10vh;
+    width: 100%;
+    /*On aligne le texte au centre de celui-ci*/
+    text-align: center;
+}
+
+/*Zone des caractéristiques principales du footer*/
+footer{
+    /*On le met en position fixed*/
+    position: fixed;
+
+    /*on met le bas et sa hauteur en position de 0*/
+    bottom: 0;
+    right: 0;
+
+    /*on met un display flex sur celui-ci où tout sera centré parfaitement*/
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    /*On aligne le texte au centre*/
+    text-align: center;
+
+    /*On lui met que la couleur du texte sera le blanc et que la couleur d'arrière-plan sera celle du texte du footer*/
+    color: var(--couleur-arriere-plan-text);
+    background-color: var(--texte-du-footer);
+
+    /*On précise que son hauteur minimum est à 20vh et sa largeur est à 100%*/
+    min-height: 20vh;
+    width: 100%;
+}

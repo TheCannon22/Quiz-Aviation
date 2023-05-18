@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="fr-CA">
+<head>
+    <title>TIM-2W2 - TP2-Création d'un quiz </title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Ajustement de la taille du viewport -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Polices de caractères utilisées-->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Train+One&display=swap" rel="stylesheet">
+
+    <!-- Polices d'icônes utilisées sur google icons-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!-- Références aux CSS-->
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/styleBase.css">
+    <link rel="stylesheet" href="css/styleDuQuiz.css">
+</head>
+
+<!-- Zone pour tout le body de la page-->
+<body>
+    <!-- Zone pour le bouton qui sert à changer de couleur pour l'arrière-plan du quiz-->
+    <div class="button-choix">
+        <div class="material-icons">sentiment_satisfied</div>
+        <input type="checkbox" id="cc-boite" />
+        <label for="cc-boite" class="couleur"></label>
+        <div class="material-icons">sentiment_dissatisfied</div>
+    </div>
+    <!--Notre premier main sert à afficher l'animation du texte, l'animation de l'avion et l'affichage du bouton pour partir le quiz-->
+    <main class="introduction">
+
+        <div class="animation-titre-depart">TP2-Quiz d'aviation </div>
+        <!--On met 2 images pour les différentes requêtes médias. L'initiale est la plus petite. Les deux images sont des png-->
+        <picture>
+            <source media="(min-width:576px)" srcset="images/avion3.png">
+            <img src="images/avion2.ico" alt="Ceci est un avion">
+        </picture>
+        <footer></footer>
+    </main>
+    <!-- Notre deuxième main sert à montrer le quiz en soi avec tous les choix de réponses et aussi les titre des questions. Il y a aussi un footer qui indique qui a créé le quiz-->
+    <main class="quiz-en-soi">
+        <header>
+           <p> Air Énergie </p> 
+        </header>
+        <!--Dans la section, il y aura le titre de la question avec tous les choix de réponses-->
+        <section>
+            <div class="titre-page-question"></div>
+            <div class="options-questions"></div>
+        </section>
+        <footer></footer>
+    </main>
+
+    <!-- le troisième main sert à afficher la fin du quiz et donne la possibilité au joueur de complétement recommencer le quiz pour s'améliorer-->
+    <main class="fin-quiz">
+        <header>Vous êtes arrivé à la fin du quiz</header>
+        <span class="material-icons btn-redemarrage">cached</span>
+    </main>
+    <!--Vu qu'on doit faire une souris personnalisé, il y a une div pour celle-ci-->
+    <div class="souris"></div>
+    <!-- Chargement des différents scriptes de Javascript-->
+    <script src="js/questionsQuiz.js"></script>
+    <script src="js/index.js"></script>
+</body>
+</html>

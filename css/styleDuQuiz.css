@@ -1,0 +1,1023 @@
+/*On ajoute une police de caractère qui provient de google fonts, dont elle s'appelle "Caveat"*/
+@font-face {
+    font-family: 'caveat';
+    src: url(../police/Caveat-VariableFont_wght.ttf);
+}
+
+/*****************************************************************Zone pour mettre toutes les couleurs dans le root, la police de caractère et avec les positions X et Y de la souris personnalisée*******************************************************************************/
+
+:root{
+    /*Ceux-ci sont les couleurs qui seront utilisées pour l'arrière-plan de chacun des éléments de la page*/
+    --arriere-plan-intro: #cae9ff;
+    --texte-du-footer: #1b4965 ;
+    --texte-des-mains: #5fa8d3 ;
+    --arriere-survol-choix: #1b4965 ;
+    
+    /*On met tous les couleurs qui seront utilisées pour les textes de bonne ou mauvaise réponse*/
+    --texte-de-succes: green;
+    --texte-de-mauvaise-reponse: red;
+
+    /*Couleurs utilisées pour le texte des choix de réponse*/
+    --couleur-arriere-plan-text: white;
+    --couleur-tous-les-textes: black;
+
+    /*Zone servante aux caractéristiques de la souris. Avec ceux-ci, on indique que la souris se positionne initialement aux coordonnées (0,0)*/
+    --mouse-x: 0px;
+    --mouse-y: 0px;
+
+    /*Couleur pour le curseur personnalisé*/
+    --couleur-contour-souris: rgb(51, 20, 20);
+    /*Zone servante pour la police de caractère qui sera utilisé partout*/
+    --police-caractere: 'caveat';
+}
+
+/**************************************************************************VEUILLEZ NOTEZ QUE CE DOSSIER CSS SERA SÉPARÉ EN QUATRE! La première partie sera la zone de la souris, la deuxième partie sera la zone de l'introduction, la troisième partie sera la zone du quiz principale et la quatrième sera la zone de fin de quiz***************************************************************************************************/
+
+/*************************************************************************Code uniquement servant pour la souris personnalisée dans le quiz **********************************************************************************/
+
+/******On commence par enlever le curseur principal dans le Body dans le fichier css "styleBase.css"****/
+
+/* Curseur général de la page qui sera en forme de carré*/
+.souris {
+    /*On met le curseur en position fixed*/
+    position: fixed;
+
+    /*On lui ajuste la largeur et l'hauteur à 2rem*/
+    width: 2rem;
+    height: 2rem;
+
+    /*On lui ajuste l'haut et le bas dépendamment de la position de la souris*/
+    top: var(--mouse-y);
+    left: var(--mouse-x);
+
+    /*On lui met une bordure assez grande pour le voir*/
+    border: 5px solid var(--couleur-contour-souris);
+
+    /*On lui met son pointer0events à none*/
+    pointer-events: none;
+
+    /*On met son will-change à haut et gauche pour que quand la souris change de position en X et en Y*/
+    will-change: top, left;
+
+    /*On fait une transition de la largeur et de l'hauteur quand la souris sera en survol*/
+    transition: width 0.25s, height 0.25s;
+
+    /*on met son z-index à 1000 pour qu'on puisse le voir sur l'écran*/
+    z-index: 1000;
+}
+
+/*La classe souris en after*/
+.souris::after {
+    /*On le met en position absolute et on enlève le contenu dedans*/
+    position: absolute;
+    content: "";
+
+    /*On met à 50% son top et son left*/
+    top: 50%;
+    left: 50%;
+
+    /*On ajuste son hauteur et sa largeur à 0*/
+    width: 0;
+    height: 0;
+
+    /*On met que sa bordure est à 5px en solid de couleur noir*/
+    border: 5px solid var(--couleur-tous-les-textes);
+
+    /*On transforme en l'enlevant complétement du carré*/
+    transform: translate(-50%, -50%);
+}
+
+/* Curseur inactif lorsqu'on quitte la fenêtre */
+.souris.inactif {
+    display: none;
+}
+
+/*Quand la souris survole les choix de réponses*/
+.souris.m-survol {
+    /*L'arrière-plan change à la couleur du header de l'introduction*/
+    background-color:var(--arriere-plan-intro);
+
+    /*On augmente sa taille à 5rem dans la largeur et l'hauteur*/
+    width: 5rem;
+    height: 5rem;
+}
+
+/*Quand la souris est sourvolé after*/
+.souris.m-survol::after {
+    /*Sa position est absolute et il n'y a aucun contenu dedans celle-ci*/
+    position: absolute;
+    content: "";
+
+    /*On enlève complétement le carré dedans*/
+    border: none;
+}
+
+
+/********************************************************************************Zone pour le button de changement de thème d'arrière-plan *****************************/
+/*Les caractéristiques du button de changement de couleur*/
+.button-choix {
+    /*On le met en position fixed avec le bas et la droite à 0 pour qu'il se place en bas à droite*/
+    position: fixed;
+    bottom:  0;
+    right: 0;
+
+    /*On le met en display flex et parfaitement centré*/
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    /*On met un petit padding de droite pour les séparer*/
+    padding-right: 1rem;
+
+    /*On met un z-index assez haut pour qu'on les voit bien*/
+    z-index: 10;
+}
+
+/*La case à cocher est invisible*/
+#cc-boite {
+    display: none;
+}
+
+/*Caractéristiquers du label de couleur*/
+label.couleur {
+    /*on met en display flex et on le centre*/
+    display: flex;
+    align-items: center;
+    /*On le met en position relative*/
+    position: relative;
+
+    /*On ajuste sa largeur à 4rem et l'hauteur à 1.5rem*/
+    width: 4rem;
+    height: 1.5rem;
+
+    /*On calcule son border-radius avec calc*/
+    border-radius: calc(1.5rem / 2);
+
+    /*On met une bordure bleu clair*/
+    border: 0.1rem solid var(--arriere-plan-intro);
+}
+
+/*Caractéristiques du label de couleur en before*/
+label.couleur::before {
+    /*On le met en position absolute et sans contenu*/
+    position: absolute;
+    content: "";
+
+    /*On ajuste son hauteur et sa largeur à 2rem*/
+    width: 2rem;
+    height: 2rem;
+    /*On crée un carré de 0.05rem de bordure*/
+    border: 0.05rem solid var(--arriere-plan-intro);
+    background-color: var(--arriere-survol-choix);
+
+    /*On lui met un margin-bottom de 0.5rem*/
+    margin-bottom: 0.5rem;
+
+    /*On lui met une transition vers la gauche pendant une seconde*/
+    transition: left 1s;
+}
+
+/*Chaque fois que la boîte est coché _ le label de couleur est en before*/
+#cc-boite:checked + label.couleur::before {
+    /*On déplace le bouton de 2.4rem*/
+    left: 2rem;
+}
+
+/***********************************************************************************************Partie 2- Zone servante pour toutes les caractéristiques de l'introduction du quiz***************************************************************/
+
+/**************************************************************************************Cette section contient toutes les animations faites durant toute l'introduction du quiz **************************************************************************************************/
+
+/*Zone pour l'animation de l'introduction de mon texte principale*/
+
+/*Zone pour faire apparaître le texte d'en haut vers le haut de la page et faire un petit rebondissement*/
+@keyframes saut-intro{
+    0% {
+        transform: translateY(1000px);
+     }
+     60% {
+        transform: translateY(-50px);
+     }
+     80% {
+        transform: translateY(30px);
+     }
+     100% {
+        transform: translateY(0);
+     }
+}
+
+
+/*Classe servante à controller les caractéristiques du texte d'intro et les caractéstiques de l'animation d'intro du titre*/
+
+.animation-titre-depart{
+    /*On lui ajoute la police de caractère de caveat et on aligne le texte au centre*/
+    font-family: var(--police-caractere);
+    text-align: center;
+
+    /*On le met en position fixed avec le haut et la droite en 0*/
+    position: fixed;
+    top: 0;
+    right: 0;
+
+    /*On lui met une largeur de 100% pour que ça couvre toute la largeur de la page*/
+    width: 100%;
+
+    /*On lui met une taille de police de 2.5rem initial pour que ça rentre parfaitement dans la page web*/
+    font-size: 2.5rem;
+    
+    /*On lui met les caractéristiques des couleurs utilisées dont le noir pour le texte en soi et le blanc pour le fond arrière de celui-ci*/
+    color: var(--couleur-tous-les-textes);
+    background-color: var(--arriere-plan-intro);
+
+    /*On met une animation sur le keyframes "saut-intro" qui va durer 2 secondes et dont 0.35 secondes plus tard, le jeu peut-être commencer*/
+    animation: saut-intro 2000ms 350ms ;
+}
+
+/*Le footer dans la classe introduction*/
+.introduction > footer{
+    /*On lui ajoute la police de caractère de caveat */
+    font-family: var(--police-caractere);
+    /*On lui met une grande de police de caractères de 2rem*/
+    font-size: 2rem;
+}
+
+
+/**************************************************************************************************** Partie 3 - Zone de tous les éléments présents dans la zone du quiz en soi, donc dans le deuxième main de la page*******************************************************************************/
+
+/*Ceci est l'animation de secoue pour le texte dans le header quand le quiz aura commencé pour toute la durée*/
+
+@keyframes animation-secoue{
+    0%, 100% {
+        transform: translateX(0);
+    } 
+    10%, 30%, 50%, 70%, 90% {
+        transform: translateX(-30px);
+    } 
+    20%, 40%, 60%, 80% {
+        transform: translateX(30px);
+    } 
+}
+
+/*On met l'animation de secoue sur le p du texte et on le fait jouer pour le restant du quiz. On lui met un délai de 1.5 secondes*/
+main.quiz-en-soi > header > p{
+    animation: animation-secoue 3s 1.5s infinite;
+}
+
+/*Zone pour mettre tous les éléments du quiz en soi en colonne*/
+main.quiz-en-soi{
+    /*Enlever tous les éléments*/
+    display: none;
+    /*Mettre la direction en colonne*/
+    flex-direction: column;
+}
+
+/*Ajustemenet des caractères du header dans le main du de la classe "quiz-en-soi"*/
+main.quiz-en-soi > header{
+    /*On lui ajoute la police de caractère de caveat */
+    font-family: var(--police-caractere);
+    /*On met le header en position fixed à 0 au top et à 0 à droite*/
+    position: fixed;
+    top: 0;
+    right: 0;
+
+    /*On met le contenu en display flex, mis au centre de la page et en alignant le texte au centre de la page */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    /*On met la grandeur de la police de character à 3.5rem initialement*/
+    font-size: 3.5rem;
+
+    /*On met la couleur de l'arrière-plan du quiz dans header en arrière plan et on met le texte en noir pour que l'utilisateur ait une meilleure visibilité de celle-ci*/
+    background-color: var(--arriere-plan-intro);
+    color: var(--couleur-tous-les-textes);
+}
+
+
+/*Zone pour faire l'animation des avions en arrière-plan dans l'introduction.*/
+/*La première animation sert pour que l'Avion vient de gauche vers le centre*/
+@keyframes animation-image {
+    from{
+        transform: translateX(-1000px);
+    }
+
+    to{
+        transform: translateX(0px);
+    }
+}
+
+/*La deuxième animation sert pour qu'on simule que l'avion est en train de voler*/
+@keyframes animation-balancement{
+    from, to{
+        transform: translateY(0px);
+    }
+
+    25%{
+        transform: translateY(-75px);
+    }
+
+    75%{
+        transform: translateY(75px);
+    }
+}
+
+/*On fait jouer l'Animation de l'image pendant 3 secondes et après 3 secondes de délai, on joue celle où il flotte*/
+img{
+    animation: animation-image 3s, animation-balancement 3s 3s infinite;
+
+}
+
+/*********************************************************************************************************Zone pour faire l'animation de toutes les animations nécessaires dans le quiz en soi ****************************************/
+/*Zone pour faire animer les cases quand que la bonne ou la mauvaise réponse est choisie*/
+
+/*Zone pour faire animer la case de bonne réponse*/
+/*Cette animation donnera l'impression au joueur d'avoir eu la bonne réponse en faisant un mouvement d'excitement et on lui met une couleur verte en arrière-plan*/
+@keyframes animation-bonne-reponse{
+    0% {
+        transform: scale(1) rotate(0deg);
+        
+    }
+    10%, 20% {
+        transform: scale(0.9) rotate(-3deg);
+    }
+    30%, 50%, 70%, 90% {
+        transform: scale(1.1) rotate(3deg);
+    }
+    40%, 60%, 80% {
+        transform: scale(1.1) rotate(-3deg);
+    }
+    100% {
+        transform: scale(1) rotate(0);
+        background-color: var(--texte-de-succes);
+    }
+    
+}
+
+/*Zone pour faire animer la case de mauvaise réponse*/
+/*Cette animation va se secouer de gauche à droite pour ainsi donner l'impression que le choix lui dit qu'il n'a pas la bonne réponse et on lui met une couleur rouge en arrière-plan*/
+@keyframes animation-mauvaise-reponse{
+    from, to{
+        transform: translateX(0%) rotateZ(0deg);
+        background-color: var(--texte-de-mauvaise-reponse);
+    }
+
+    15%{
+        transform: translateX(-30%) rotateZ(-7deg);
+    }
+
+    30%{
+        transform: translateX(30%) rotateZ(7deg);
+    }
+
+    45%{
+        transform: translateX(-15%) rotateZ(-5deg);
+    }
+
+    60%{
+        transform: translateX(15%) rotateZ(3deg);
+    }
+
+    75%{
+        transform: translateX(-5%) rotateZ(-1deg);
+    }
+}
+
+/*Zone pour appliquer l'animation sur les choix de bonnes et de mauvaises réponses*/
+
+div.choix.bonne-reponse{
+    /*Faire appliquer l'animation de la bonne réponse choisie en deux secondes et que ça se joue seulement une fois*/
+    animation: animation-bonne-reponse 2s;
+}
+
+div.choix.mauvaise-reponse{
+    /*Faire appliquer l'animation de la mauvaise réponse choisie en deux secondes et que ça se joue seulement une fois*/
+    animation: animation-mauvaise-reponse 2s;
+}
+
+
+/*********************************************************Zone pour faire l'animation de toutes les animations dans la section entière***************************************************************************/
+/*Avant chaque question, l'ordre de ces animations jouera pour faire une animation d'entrée et pour que ça révele petit à petit les réponses dont l'utilisateur aura avec la question*/
+
+/*Animation pour la première question*/
+/*Elle aura l'animation d'une chevron pointant vers la droite*/
+@keyframes animation-0-section {
+    from{
+        clip-path: polygon(50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%);
+    }
+
+    50%{
+        clip-path: polygon(75% 0%, 100% 50%, 75% 100%, 0% 100%, 25% 50%, 0% 0%);
+    }
+
+    to{
+        clip-path: polygon(100% 0, 100% 50%, 100% 100%, 0% 100%, 0 50%, 0% 0%);
+    }
+}
+
+/*Animation pour la deuxième question*/
+/*Elle aura l'animation d'un chevron pointant vers la gauche*/
+@keyframes animation-1-section {
+    from{
+        clip-path: polygon(50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%);
+    }
+    
+    50%{
+        clip-path: polygon(100% 0%, 75% 50%, 100% 100%, 25% 100%, 0% 50%, 25% 0%);
+    }
+
+    to{
+        clip-path: polygon(100% 0, 100% 50%, 100% 100%, 0% 100%, 0 50%, 0% 0%);
+    }
+}
+
+/*Animation pour la troisième question*/
+/*Elle aura l'animation d'une flèche pointant vers la droite*/
+@keyframes animation-2-section {
+    from{
+        clip-path: polygon(50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%);
+    }
+
+    50%{
+        clip-path: polygon(0% 20%, 60% 20%, 60% 0%, 100% 50%, 60% 100%, 60% 80%, 0% 80%);
+    }
+
+    to{
+        clip-path: polygon(0 0, 50% 0, 100% 0, 100% 50%, 100% 100%, 50% 100%, 0 100%);
+    }
+}
+
+/*Animation pour la quatrième question*/
+/*Elle aura l'animation d'une flèche pointant vers la gauche*/
+@keyframes animation-3-section {
+    from{
+        clip-path: polygon(50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%);
+    }
+
+    50%{
+        clip-path: polygon(40% 0%, 40% 20%, 100% 20%, 100% 80%, 40% 80%, 40% 100%, 0% 50%);
+    }
+
+    to{
+        clip-path: polygon(0 0, 50% 0, 100% 0, 100% 100%, 50% 100%, 0 100%, 0% 50%);
+    }
+}
+
+/*Animation pour la cinquième question*/
+/*Elle aura l'animation d'une étoile*/
+@keyframes animation-4-section {
+    from{
+        clip-path: polygon(50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%);
+    }
+
+    50%{
+        clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);    }
+
+    to{
+        clip-path: polygon(50% 0%, 100% 0, 100% 35%, 100% 59%, 100% 100%, 50% 100%, 0 100%, 0 51%, 0 0, 21% 0);
+    }
+}
+
+/*Animation pour la sixième question*/
+/*Elle aura l'animation d'un polygone pointant vers la droite*/
+@keyframes animation-5-section {
+    from{
+        clip-path: polygon(50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%);
+    }
+
+    50%{
+        clip-path: polygon(0% 0%, 75% 0%, 100% 50%, 75% 100%, 0% 100%);
+    }
+
+    to{
+        clip-path: polygon(0% 0%, 100% 0, 100% 50%, 100% 100%, 0% 100%);
+    }
+}
+
+/*Animation pour la septième question*/
+/*Elle aura l'animation d'un polygone pointant vers la gauche*/
+@keyframes animation-6-section {
+    from{
+        clip-path: polygon(50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%);
+    }
+
+    50%{
+        clip-path: polygon(25% 0%, 100% 0%, 100% 100%, 25% 100%, 0% 50%);
+    }
+
+    to{
+        clip-path: polygon(0 0, 100% 0%, 100% 100%, 0 100%, 0% 50%);
+    }
+}
+
+/*Animation pour la huitième question*/
+/*Elle aura l'animation d'un cercle qui va s'ouvrir de la gauche de l'écran*/
+@keyframes animation-7-section {
+    from{
+        clip-path: circle(5% at 0% 50%);
+    }
+
+    to{
+        clip-path: circle(100% at 50% 50%);
+    }
+}
+
+/*Animation pour la neuvième question*/
+/*Elle aura l'animation sera l'animation d'une croix qui va s'ouvrir au centre */
+
+@keyframes animation-8-section {
+    from{
+        clip-path: polygon(50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%);
+    }
+
+    50%{
+        clip-path: polygon(10% 25%, 35% 25%, 35% 0%, 65% 0%, 65% 25%, 90% 25%, 90% 50%, 65% 50%, 65% 100%, 35% 100%, 35% 50%, 10% 50%);
+    }
+
+    to{
+        clip-path: polygon(0 26%, 0 0, 35% 0%, 65% 0%, 81% 0, 100% 0, 100% 51%, 100% 100%, 65% 100%, 35% 100%, 0 100%, 0 48%);
+    }
+}
+
+/*Animation pour la dixième et dernière question*/
+/*Elle aura l'animation du X qui indiquera au joueur qu'il aura bientôt fini le jeu*/
+@keyframes animation-9-section {
+    from{
+        clip-path: polygon(50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%);
+    }
+
+    50%{
+        clip-path: polygon(20% 0%, 0% 20%, 30% 50%, 0% 80%, 20% 100%, 50% 70%, 80% 100%, 100% 80%, 70% 50%, 100% 20%, 80% 0%, 50% 30%);
+    }
+
+    to{
+        clip-path: polygon(20% 0%, 0 0, 0 52%, 0 100%, 20% 100%, 49% 100%, 80% 100%, 100% 100%, 100% 47%, 100% 0, 80% 0%, 51% 0);
+    }
+
+}
+
+
+/****** Section pour l'esthétique des choix de réponse de mon quiz et les caractéristiques de ceux-ci ******/
+
+/*Zone pour les titres des questions dans le quiz*/
+div.titre-page-question{
+    /*On met le titre de la question en display flex, centré complétement au milieu du texte blanc*/
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    /*On lui ajoute la police de caractère de caveat */
+    font-family: var(--police-caractere);
+
+    /*On aligne aussi le texte en plein centre de la composition*/
+    text-align: center;
+
+    /*On lui met la couleur blanche pour l'arrière-plan de celle-ci et on précise que la grandeur de la police de caractère est de 1rem*/
+    background-color: var(--couleur-arriere-plan-text);
+    font-size: 1rem;
+
+    /*On précise les caractéristiques de celle-ci avec la largueur à 100% et la hauteur en 5vh*/
+    width: 100%;
+    height: 5vh;
+}
+
+/*Caractéristiques pour toutes les classes nommées "choix" */
+div.choix{
+    /*On met la position de celui-ci en relative*/
+    position: relative;
+
+    /*Permet de gérer le contenu de l'élément body*/
+    overflow: hidden;
+
+    /*Zone pour mettre les choix de réponses en display flex, centré dans la page et que le texte dedans ceux-ci soit aussi centré*/
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    /*On leur applique une largueur de 80vmin et une hauteur de 15vmin*/
+    width: 80vmin;
+    height: 15vmin;
+
+    /*On met que le texte dedans soit en noir et que la couleur de fond soit le vert*/
+    color: var(--couleur-tous-les-textes);
+    background-color: var(--arriere-plan-intro);
+
+    font-family: var(--police-caractere);
+
+    /*La grandeur de la police sera de 1.2rem*/
+    font-size: 1.4rem;
+
+    /*On lui met une bordure de 2px en forme solide de couleur grise et on lui met un border-radius de 50% 50% pour créer la forme d'un oval*/
+    border: 2px solid black;
+    border-radius: 50% 50%;
+
+    /*On met une transition de 0.5s pour que le box-shadow apparaît quand que le joueur positionnera la souris sur le choix de réponse*/
+    transition: box-shadow 0.5s;
+
+    /*On met le z-index à 1 pour que ça soit en avant-plan de tout (Sinon le survol ne fonctionnera pas bien)*/
+    z-index: 1;
+}
+
+/*******************************Cette zone servira à faire les différentes animations de hover pour chacune des choix de réponses*****************************/
+
+/*Le premier choix de réponse aura l'animation qui arrivera de la gauche vers la droite et qui va revenir à gauche après*/
+
+/*Quand il y aura un hover, le texte en arrière-plan va changer de couleur avec le blanc et il y aura une box-shadow en noir qui apparaîtera autour ainsi donnant l'effet que le choix de réponse se lève. Cela s'appliquera pour les quatre choix de réponse*/
+div.choix:nth-of-type(1):hover, div.choix:nth-of-type(2):hover, div.choix:nth-of-type(3):hover, div.choix:nth-of-type(4):hover {
+    color: var(--couleur-arriere-plan-text);
+    box-shadow: 10px 10px 10px 1px black;
+}
+
+/*les caractéristiques du premier choix en before*/
+div.choix:nth-of-type(1)::before{
+    /*La position change en absolute et on met du contenu vide avec les chaînes de caractères pour que rien ne se voit*/
+    position:absolute;
+    content:"";
+
+    /*On met l'haut, la droite et la gauche à 0% pour que le tout rentre dans les choix de réponses*/
+    top: 0%;
+    right: 0%;
+    left: 0%;
+
+    /*On lui ajuste l'hauteur et la largueur de celui-ci avec celle des choix de réponses initiale,donc 80 vmin en largueur et 15vmin en hauteur*/
+    width: 80vmin;
+    height: 15vmin;
+
+    /*On met une transformation, dont la position initiale de la barre est à -135% en X*/
+    transform: translateX(-135%);
+    /*On lui ajoute une petite transition qui va durer 1 seconde*/
+    transition: transform 1s;
+
+    /*On met en arrière-plan la couleur de survol de chaque choix qui est un bleu foncé*/
+    background-color: var(--arriere-survol-choix);
+
+    /*On met le z-index à -1 pour qu'il apparaît en arrière-plan*/
+    z-index: -1;
+}
+
+/*Quand on survole les choix de réponses avec la pseudo-classe ::before, on met la position initiale de la barre à 0% pour qu'elle prenne tous l'espace. Cela s'appliquer pour les deux premier choix de réponses*/
+div.choix:hover:nth-of-type(1)::before, div.choix:hover:nth-of-type(2)::before{
+    transform: translateX(0%);
+}
+
+/*Le deuxième choix de réponse aura l'animation qui arrivera de la droite vers la gauche et qui va revenir à droite après*/
+
+/*les caractéristiques du deuxième choix en before*/
+div.choix:nth-of-type(2)::before{
+    /*La position change en absolute et on met du contenu vide avec les chaînes de caractères pour que rien ne se voit*/
+    position:absolute;
+    content:"";
+
+    /*On met l'haut, la droite et la gauche à 0 pour que le tout rentre dans les choix de réponses*/
+    top: 0%;
+    right: 0%;
+    left: 0%;
+
+    /*On lui ajuste l'hauteur et la largueur de celui-ci avec celle des choix de réponses initiale,donc 80 vmin en largueur et 15vmin en hauteur*/
+    width: 80vmin;
+    height: 15vmin;
+
+    /*On met une transformation, dont la position initiale de la barre est à 135% en X*/
+    transform: translateX(135%);
+    /*On lui ajoute une petite transition qui va durer 1 secondes*/
+    transition: transform 1s;
+
+    /*On met en arrière-plan la couleur de survol de chaque choix qui est un bleu foncé*/
+    background-color: var(--arriere-survol-choix);
+
+    /*On met le z-index à -1*/
+    z-index: -1;
+}
+
+/*Dans le choix numéro 3::before, on fera une animation qui commence de la droite et qui va finir vers la gauche*/
+div.choix:nth-of-type(3)::before {
+    /*On le met en position absolute et sans aucun contenu dedans*/
+    position: absolute;
+    content: "";
+
+    /*On prend toute la largeur de 100% et l'hauteur de 15vh*/
+    width: 100%;
+    height: 15vh;
+
+    /*La couleur d'arrière plan est celle du survol*/
+    background-color: var(--arriere-survol-choix);
+
+    /*le bas et la gauche sont à 0*/
+    bottom: 0;
+    left: 0;
+
+    /*L'origine de la transformation est à gauche, la grandeur initiale est de 0*/
+    transform-origin: left;
+    transform: scaleX(0);
+
+    /*On lui fait jouer une transition du transform de 1 seconde en ease-in-out */
+    transition: transform 1s ease-in-out;
+
+    /*On lui met un z-index à -1 pour qu'il apparaît en arrière-plan*/
+    z-index: -1;
+  }
+
+/*En survol du choix 3 en before, on change le transform-origin à droite et on agrandit de 1 la grosseur de celui-ci pour qu'il part vers la gauche*/
+div.choix:hover:nth-of-type(3)::before {
+  transform-origin: right;
+  transform: scaleX(1);
+}
+
+/*Dans le choix numéro 4::before*/
+div.choix:nth-of-type(4)::before {
+    /*On le met en position absolute et sans aucun contenu dedans*/
+    position: absolute;
+    content: "";
+
+    /*On prend toute la largeur de 100% et l'hauteur de 15vh*/
+    width: 100%;
+    height: 15vh;
+
+    /*La couleur d'arrière plan est celle du survol*/
+    background-color: var(--arriere-survol-choix);
+
+    /*le bas et la gauche sont à 0*/
+    bottom: 0;
+    left: 0;
+
+    /*L'origine de la transformation est à droite, la grandeur initiale est de 0*/
+    transform-origin: right;
+    transform: scaleX(0);
+
+    /*On lui fait jouer une transition du transform de 1 seconde en ease-in-out */
+    transition: transform 1s ease-in-out;
+
+    /*On lui met un z-index à -1 pour qu'il apparaît en arrière-plan*/
+    z-index: -1;
+  }
+
+/*En survol du choix 4 en before, on change le transform-origin à gauche et on agrandit de 1 la grosseur de celui-ci pour qu'il part vers la droite*/
+div.choix:hover:nth-of-type(4)::before {
+  transform-origin: left;
+  transform: scaleX(1);
+}
+
+/*Zone pour les options de questions dans le quiz entier*/
+section .options-questions{
+    /*Conteneur flex en colonne, séparé en space-around et tous centrés*/
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-direction: column;
+
+    /*On ajuste la hauteur à 70 vh et la largeur de 90 vw*/
+    height: 70vh;
+    width: 90vw;
+
+    /*Étirement comme item flex*/
+    flex: 1 1 auto;
+
+}
+
+/*On désactive la possibilité pour le joueur de répondre à plus d'une fois dans le quiz*/
+section .options-questions.desactiver{
+    /*Si le joueur à déjà répondu à la question, il ne peut plus reclicker sur celle-ci, donc il a seulement le droit de répondre une seule fois*/
+    pointer-events: none;
+}
+
+/*Voici les caractéristiques du footer dans le quiz-en-soi*/
+.quiz-en-soi > footer{
+    /*On lui ajoute la police de caractère de caveat */
+    font-family: var(--police-caractere);
+    /*On le met en display flex et en colonne*/
+    display: flex;
+    flex-direction: column;
+    /*On aligne le texte au centre et on lui met une police de caractère de 1rem*/
+    text-align: center;
+    font-size: 1.5rem;
+    /*On précise que sa hauteur minimale est de 10vh et qu'il a 100% de largeur*/
+    min-height: 10vh;
+    width: 100%;
+
+}
+
+/************************************************************************************************************ Qautrième partie - Zone pour tous les éléments mis dans la conclusion du quiz **************************/
+
+@keyframes changement-couleur{
+    from, 60%, to{
+        background-color: var(--arriere-plan-intro);
+    }
+
+    40%,80%{
+        background-color: var(--couleur-arriere-plan-text);
+    }
+}
+
+/*Caractéristiques du header de fin de quiz*/
+.fin-quiz > header{
+
+    /*On met le texte en display flex, avec le texte qui sera parfaitement centré*/
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    /*On lui ajoute la police de caractère de caveat */
+    font-family: var(--police-caractere);
+
+    /*On lui met la même couleur que le header de l'introduction*/
+    background-color: var(--arriere-plan-intro);
+    /*On met le header en position fixed*/
+    position: fixed;
+
+    /*On met le haut et la droite à 0*/
+    top: 0;
+    right: 0;
+
+    /*On ajuste que la taille de police de caractères soit à 2rem*/
+    font-size: 2rem;
+
+    /*On ajuste l'hauteur et la largueur à 100%*/
+    min-height: 10%;
+    width: 100%;
+
+
+    /*On lui met l'animation de couleur qui va durer jusqu'à l'infini et aura un délai de 2s*/
+    animation: changement-couleur 4s 2s infinite;
+}
+
+/*Caractéristiques du main pour la fin-quiz*/
+main.fin-quiz{
+    /*Rien au démarrage*/
+    display: none;
+    /*Conteneur flex en colonne*/
+    flex-direction: column;
+    /*La grandeur de la police de caractère est de 1.5rem*/
+    font-size: 1.5rem;
+
+    width: 100%;
+}
+
+/*Les propriétés pour le bouton de redémarrage dans la fin du quiz*/
+main.fin-quiz .btn-redemarrage {
+    /*On met que chaque fois qu'il est survolé que le pointer apparaît*/
+    cursor: pointer;
+    font-size: 3rem;
+    margin-top: 2rem;
+    /*On lui met une opacité de 0 pour qu'il ne se montre pas au début*/
+    opacity: 0;
+    /*On lui une transition de deux secondes où l'opacité devient 1*/
+    transition: opacity 2s;
+}
+
+/***************************************** Zone pour faire l'animation de fin quiz quand que le quiz est officiellement fini ***************************************************/
+
+/*L'animation pour l'appparition du texte final*/
+@keyframes animer-resultat {
+    from{
+        transform: scale(0.1);
+    }
+
+    to{
+        transform: scale(1);
+    }
+}
+
+
+/*Caractéristiques de la classe "résultat final" quand que le quiz aura fini*/
+main.fin-quiz .resultat-final {
+    /*On lui ajoute la police de caractère de caveat */
+    font-family: var(--police-caractere);
+    /*On met le tout en display flex et mis en rangée*/
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+
+    /*On ajuste la couleur en arrière-plan qui sera en blanc et la couleur du texte qui sera en noir*/
+    background-color: var(--couleur-arriere-plan-text);
+    color: var(--couleur-tous-les-textes);
+
+    /*On fait une transformation sur la grandeur de celui-ci et de sa rotation en Z*/
+    transform: scale(0) rotateZ(0);
+
+    /*On applique l'animation "animer-resultat" sur le resultat final du quiz*/
+    animation: animer-resultat 2s forwards;
+}
+
+.messageHasard{
+    /*On le met en flex et on aligne le texte au centre*/
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /*On lui ajoute la police de caractère de caveat */
+    font-family: var(--police-caractere);
+
+    /*On ajuste la couleur en arrière-plan qui sera en blanc et la couleur du texte qui sera en noir*/
+    background-color: var(--couleur-arriere-plan-text);
+    color: var(--couleur-tous-les-textes);
+
+    /*On applique l'animation "animer-resultat" sur le resultat final du quiz*/
+    animation: animer-resultat 2s forwards;
+}
+
+/*Zone pour le bouton de redemarrage*/
+span.material-icons.btn-redemarrage{
+    /*On le met en display flex et qu'il soit centré parfaitement*/
+    display: flex;
+    justify-content: center;
+}
+
+/*Zone pour l'ajustement des requêtes médias de mon site*/
+
+/**** Ajustement de la requête pour un téléphone****/
+@media screen and (min-width:576px) {
+    /*On ajuste les choix de réponses pour qu'ils ne soient plus en oval et on agrandit la typographie à 2.1rem*/
+    div.choix{
+        border-radius: 0% 0%;
+        font-size: 2.1rem;
+    }
+    /*Dans le footer,du quiz en soi, on augmente la police de caractère à 2rem*/
+    .quiz-en-soi > footer{
+        font-size: 2rem;
+    }
+    /*Dans l'animation de départ, la grandeur de la police sera augmenter jusqu'à 4rem*/
+    .animation-titre-depart{
+        font-size: 4rem;
+    }
+
+    /*Dans le header, du quiz en soi, on augmente la police de caractère jusqu'à 4.5rem*/
+    main.quiz-en-soi > header{
+        font-size: 4.5rem;
+    }
+
+    /*Dans le titre principal de chaque question, on augmente la police de caractère jusqu'à 1.5rem*/
+    div.titre-page-question{
+        font-size: 1.5rem;
+    }
+    /*On augmente la taille du footer dans l'introduction à 2.5rem*/
+    .introduction > footer{
+        font-size: 2.5rem;
+    }
+
+
+}
+/**** Ajustement de la requête pour une tablette ****/
+@media screen and (min-width:768px) {
+    /*On ajuste les choix de réponses pour qu'ils aient une largeur de 40vw et une hauteur de 15vh et on raptise la police de caractère à 1.5rem*/
+    div.choix{
+        font-size: 1.5rem;
+        width: 40vw;
+        height: 15vh;
+    }
+    /*Dans le footer,du quiz en soi, on augmente la police de caractère à 2.3rem*/
+    .quiz-en-soi > footer{
+        font-size: 2.5rem;
+    }
+
+    /*Dans l'animation de départ, la grandeur de la police sera augmenter jusqu'à 5rem*/
+    .animation-titre-depart{
+        font-size: 5rem;
+    }
+
+    /*Dans le header, du quiz en soi, on augmente la police de caractère jusqu'à 5.1rem*/
+    main.quiz-en-soi > header{
+        font-size: 5.1rem;
+    }
+
+    /*Dans le titre principal de chaque question, on augmente la police de caractère jusqu'à 2rem*/
+    div.titre-page-question{
+        font-size: 2rem;
+    }
+
+    /*Dans la section des options de questions, on met le tout en display flex, en rangée et en wrap pour les mettre dans les quatre coins de la page*/
+    section .options-questions{
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    /*On augmente la taille du footer dans l'introduction à 3rem*/
+    .introduction > footer{
+        font-size: 3rem;
+    }
+}
+/**** Ajustement de la requête pour un ordi****/
+@media screen and (min-width:992px) {
+    /*On reagrandit la typographie à 2rem*/
+    div.choix{
+        font-size: 2rem;
+    }
+    /*Dans le footer,du quiz en soi, on augmente la police de caractère à 3rem*/
+    .quiz-en-soi > footer{
+        font-size: 3rem;
+    }
+
+    /*On agrandit la police de caractère dans le footer de l'introduction à 4rem*/
+    .introduction > footer{
+        font-size: 4rem;
+    }
+
+    /*Dans l'animation de départ, la grandeur de la police sera augmenter jusqu'à 6.5rem*/
+    .animation-titre-depart{
+        font-size: 6.5rem;
+    }
+
+    /*Dans le titre principal de chaque question, on augmente la police de caractère jusqu'à 2.5rem*/
+    div.titre-page-question{
+        font-size: 2.5rem;
+    }
+}
+
+
